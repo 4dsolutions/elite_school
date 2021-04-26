@@ -57,7 +57,7 @@ def move(direction, cell):
         pass
     return cell
 
-def read_moves(the_file = "as3-test.txt"):
+def read_moves(the_file):
     scenarios = []
     with open(the_file) as f:
         for line in f.readlines():
@@ -65,8 +65,8 @@ def read_moves(the_file = "as3-test.txt"):
             scenarios.append((cell,list(path)))
     return enumerate(scenarios, start=1)
 
-def main():
-    turns = read_moves()
+def main(the_file = "as3_hexwalk2.txt"):
+    turns = read_moves(the_file)
     for turn in turns:
         # print("turn:", turn)
         idx, (pos, path) = turn

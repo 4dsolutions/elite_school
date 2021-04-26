@@ -62,10 +62,10 @@ def highest_team(player_data):
 
 def main(input_file, output_file=None):
     """
-    input_file = as_1_aball_sample.txt or as_1_aball_test.txt
+    input_file = as_1_aball_sample1.txt or as_1_aball_sample2.txt
     output_file = None or any string, output to console if None
     """
-    the_data = get_data(input_file) # None or "as_1_aball_test.txt"
+    the_data = get_data(input_file)
     # three pointers
     three = three_pointers(the_data)
     # most goals
@@ -92,5 +92,5 @@ def main(input_file, output_file=None):
         f.close()
     
 if __name__ == "__main__":
-    main("as_1_aball_sample.txt")
-    main("as_1_aball_test.txt")
+    main("as_1_aball_sample1.txt")
+    main("as_1_aball_sample2.txt")

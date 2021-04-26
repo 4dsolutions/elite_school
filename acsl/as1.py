@@ -64,9 +64,9 @@ def check_bag(target, all_subgrids):
             counter += 1
     return counter
             
-def main():
-    grid = get_grid("as1-test.txt")
-    p = get_puzzles("as1-test.txt")
+def main(the_file):
+    grid = get_grid(the_file)
+    p = get_puzzles(the_file)
     for i in range(10):
         t = p[i]
         # size of target
@@ -74,7 +74,7 @@ def main():
         cs = len(t[0])
         # all possible subgrids of that size
         bag = get_all_subgrid(rs, cs, grid)
-        print(bag)
+        # print(bag)
         # count number of matches
         cnt = check_bag(t, bag)
         print("{:2}. {:2}".format(i+1, cnt))

@@ -84,8 +84,8 @@ def slide(mv, plc, grid):  # would prefer this be swap
     
     return get_None(grid)
 
-def main():
-    all_puzzles = read_data()
+def main(the_file):
+    all_puzzles = read_data(the_file)
     for i in range(10):
         puzzle = all_puzzles[i]
         the_grid = make_grid(puzzle[0])
