@@ -95,6 +95,6 @@ def main(input_file, output_file=None):
         f.close()
         
 if __name__ == "__main__":
-    main("as_5_letters_sample.txt")
-    main("as_5_letters_test.txt")
+    main("as_5_letters_sample1.txt")
+    main("as_5_letters_sample2.txt")
         
