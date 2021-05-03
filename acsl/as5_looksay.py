@@ -2,6 +2,12 @@ def substr(s, start, more):
     return s[start-1:start+more]
 
 def looksay(s: str) -> str:
+    """
+    https://en.wikipedia.org/wiki/Look-and-say_sequence
+    1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
+    
+    https://en.wikipedia.org/wiki/Look-and-say_sequence
+    """
     if not type(s) is str:
         raise TypeError
     if not s.isdigit():

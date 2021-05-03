@@ -1,6 +1,7 @@
 import itertools
+from typing import List
 
-def make_panel(rows, cols, data):
+def make_panel(rows: int, cols: int, data: str) -> List:
     rows = []
     template = "{:0" + str(cols) + "b}"
     for hexcode in data.split():
