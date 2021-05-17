@@ -1,6 +1,17 @@
+"""
+The code below fleshes out a possible approach to
+the Gridimeter challenge without providing a 
+complete solution.  A lot of the sample exercises
+pass, but not all of them do.
+
+Is this approach worth pursuing or is it a false
+trail and dead end?  Do you have a different 
+algorithm to propose?
+"""
+
 import numpy as np
 
-data = "5 5 2F59 2EEB 840 840 33B1"
+data = "5 5 2F59 2EEB 840 840 33B1"  # choose any sample and run
 
 def make_grid(r : str, c : str, *rows): # gather into 3 params
     """
