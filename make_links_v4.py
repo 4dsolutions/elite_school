@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Thu Jan 28 21:27:07 2016
 
@@ -14,7 +13,7 @@ Bookmark(place='Anaconda.org', url='http://anaconda.org', tags='tool')
 from collections import namedtuple
 from context1 import DB
 
-PRINT = True  # make true if you wish screen noise (echo of bookmarks)
+PRINT = False  # make true if you wish screen noise (echo of bookmarks)
 
 Bmk = namedtuple('Bookmark', 'place url tags')
 
@@ -110,7 +109,6 @@ def printall():
 
 if __name__ == "__main__":
 
-    
     bookmarks = bumpy()
     # bookmarks = smooth()
 
