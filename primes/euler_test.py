@@ -48,7 +48,6 @@ def xgcd(a, b):
 def invmod(a, b):
     return xgcd(a, b)[1] % b
 
-
 def test_small():
     # small number example
     print("---< SMALLER NUMBERS >---")

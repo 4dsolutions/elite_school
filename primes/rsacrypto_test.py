@@ -14,7 +14,7 @@ Note that OpenSSL is the more frequently used not-Python
 util, run from the OS command line.
 """
 
-from euler_test import invmod
+from primes import invmod
 
 import Crypto.PublicKey.RSA as rsa
 
@@ -32,16 +32,16 @@ e = rsaobj.e  # public encrypt exponent
 d = rsaobj.d  # secret decrypt key
 
 def test_n():
-    assert p*q == n
+    return p*q == n
 
 def test_inverse():
-    d == invmod(e, (p-1)*(q-1))
+    return d == invmod(e, (p-1)*(q-1))
     
 def test_euler():
     totient_of_n = (p-1)*(q-1)
-    assert (e*d) % totient_of_n == 1
+    return (e*d) % totient_of_n == 1
 
 def test_decrypt():
     plaintext = b"able was i ere i saw elba"  # famous palindrome
     ciphertext = rsaobj.encrypt(plaintext, b"K")
-    assert rsaobj.decrypt(ciphertext[0]) == plaintext
+    return rsaobj.decrypt(ciphertext[0]) == plaintext

@@ -8,3 +8,4 @@ PrimeNumbers: a prime numbers generator / iterator
 
 from primes.primesplay import factors, isprime, all_factors, eratosthenes
 from primes.primes_gen import PrimeNumbers
+from primes.euler_test import xgcd, invmod

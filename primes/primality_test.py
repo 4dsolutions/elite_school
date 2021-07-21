@@ -10,11 +10,11 @@ Primes always pass the Fermat Test:
 Given b,p have no factors in common:
     b**(p-1) / p == 1 
 or: pow(b, p-1, p) == 1
-or: (b**p - b)
+or: (b**p - b) % p == 0
 
 But then so do some composites. The Carmichael Numbers 
-are called absolute Fermat pseudoprimes because they
-pass all Fermat Tests with flying colors.
+are called Fermat pseudoprimes because they pass the 
+Fermat Test with flying colors.
 """
 
 from math import gcd
