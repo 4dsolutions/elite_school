@@ -97,8 +97,27 @@ class Mod:
     def __mul__(self, other):
         return type(self)(self.value * other.value)
     
+    def __truediv__(self, other):
+        return self * ~other
+    
+    def __neg__(self):
+        return type(self)(-self.value)
+    
+    def __sub__(self, other):
+        return self + -other
+    
+    def __invert__(self):
+        for i in range(1, self._modulus):
+            if self * Mod(i) == Mod(1):
+                return Mod(i)
+        
     def __pow__(self, n):
-        return type(self)(pow(self.value, n, self._modulus))
+        if n < 0:
+            value = (~self).value
+            n = abs(n)
+        else:
+            value = self.value
+        return type(self)(pow(value, n, self._modulus))
     
     def __hash__(self):
         return self.value
