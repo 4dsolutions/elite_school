@@ -128,8 +128,8 @@ def _test( ):
     thefarm = Farm(20,20)
     print("Empty field, all is peaceful", 
           thefarm.render(), sep="\n\n")  # frame of film
-    t1 = Tractor(thefarm, pos=[10,10], marker="O", facing="N")
-    t2 = Tractor(thefarm, pos=[10,11], marker="X", facing="S")
+    t1 = Tractor(thefarm, pos=[10,10], marker="O", facing="E")
+    t2 = Tractor(thefarm, pos=[10,11], marker="X", facing="W")
     t1.plow() # use default markers
     t2.plow()
     print("Showing the tractors in a list: ", 

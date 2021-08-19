@@ -25,9 +25,15 @@ class CropCircleTractor(Tractor):
         c = complex((self.col + self.y_offset) * self.y_scale, 
                     (self.row + self.x_offset) * self.x_scale)
         z = complex(0,0)
-        for _ in range(10):
+        # here is where we could add more iterations and also
+        # start to add nuance, in terms of "shady characters"
+        for _ in range(15):
             z = z*z + c
         if abs(z) <= 2:
+            self.plant("#")
+        elif abs(z) <= 100:
+            self.plant("*")
+        elif abs(z) <= 10000:
             self.plant("@")
         return z
     
