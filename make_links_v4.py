@@ -76,7 +76,9 @@ tuples = (
     ("What Python IDE is best?", "https://www.quora.com/What-is-your-favorite-IDE-for-Python-programming-and-why",
      "tool"),
     ("More Help with Python", "https://medium.com/@kirbyurner/more-help-with-python-9afe2d0affe8",
-     "docs")
+     "docs"),
+    ("Microsoft Azure", "https://azure.microsoft.com/en-us/", "cloud"),
+    ("AWS", "https://aws.amazon.com/", "cloud")
 )
 
 # lets make these namedtuples instead OK?

@@ -118,7 +118,7 @@ def tick_tock_test(n):
 
 def raster_master():
     thefarm = Farm(5,5, bg = ".")
-    t1 = tractor(thefarm, facing="N", marker="^", fuel=1000) 
+    t1 = tractor(thefarm, facing="E", marker="^", fuel=1000) 
     thefarm.add(t1)
     next(t1)
     for frame in range(20):
