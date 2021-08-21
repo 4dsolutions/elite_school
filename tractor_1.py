@@ -21,6 +21,7 @@ class Field(dict):
     def __init__(self, rows, columns, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.dims = (rows, columns)
+        self.marker = "."
         self.Ts = [ ]  # add tractors to this list
 
     @property
@@ -40,7 +41,7 @@ class Field(dict):
         for x in range(self.rows):
             s += "\n"
             for y in range(self.columns):
-                s += self[x,y] if (x,y) in self else "."
+                s += self[x,y] if (x,y) in self else self.marker
         return s
 
     def __repr__(self):

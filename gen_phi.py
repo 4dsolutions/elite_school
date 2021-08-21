@@ -61,14 +61,12 @@ def test_me():
         print(approx)
         if approx == check:
             break
-        if abs(approx - last_time) < Decimal(1e-30): 
+        if abs(approx - last_time) < Decimal(1e-35): 
             break
         last_time = approx
 
     print("Approx:", approx)
     print("Check :", check)
     
-
-  
-  
- 
+if __name__ == "__main__":
+    test_me()

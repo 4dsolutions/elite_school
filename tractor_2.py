@@ -30,11 +30,11 @@ class CropCircleTractor(Tractor):
         for _ in range(15):
             z = z*z + c
         if abs(z) <= 2:
-            self.plant("#")
+            self.plant("🎃")
         elif abs(z) <= 100:
-            self.plant("*")
+            self.plant("🐍")
         elif abs(z) <= 10000:
-            self.plant("@")
+            self.plant("👀")
         return z
     
     def __iter__(self):
@@ -43,6 +43,7 @@ class CropCircleTractor(Tractor):
 if __name__ == "__main__":
     the_field = Field(100, 250)
     the_field.add_tractor(CropCircleTractor)  # initialized as added
+    the_field.marker = "😁"
     the_tractor = the_field.Ts[0] # grab reference to instance
     the_tractor.config(.025, .01, -50, -200)
     the_tractor.fuel_level = 100 * 250
