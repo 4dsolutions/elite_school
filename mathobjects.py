@@ -9,11 +9,12 @@ Created on Wed Aug  4 16:47:27 2021
 from math import gcd
 from random import shuffle 
 from string import ascii_lowercase  # all lowercase letters
+from nums import invmod
 
 
 class Rat:
     
-    def __init__(self, numer, denom):
+    def __init__(self, numer, denom=1):
         """Simplify to lowest terms upon creation"""
         common = gcd(numer, denom)
         self.numer = numer // common
@@ -36,7 +37,7 @@ class Rat:
     
     def __add__(self, other):
         if type(other) == int:
-            other = Rat(other, 1)
+            other = Rat(other)
         return Rat(
                 (self.numer * other.denom) + (other.numer * self.denom), 
                  self.denom * other.denom)
@@ -59,7 +60,7 @@ class Rat:
         if n == 0:
             return Rat(1, 1)
         if n == 1:
-            return self
+            return Rat(self.numer, self.denom)
         if n < 0:
             result = ~self
             n = abs(n)
@@ -107,9 +108,10 @@ class Mod:
         return self + -other
     
     def __invert__(self):
-        for i in range(1, self._modulus):
-            if self * Mod(i) == Mod(1):
-                return Mod(i)
+        return invmod(self.value, self._modulus)
+        #for i in range(1, self._modulus):
+        #    if self * Mod(i) == Mod(1):
+        #        return Mod(i)
         
     def __pow__(self, n):
         if n < 0:

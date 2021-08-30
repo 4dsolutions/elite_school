@@ -22,6 +22,27 @@ def gcd(a, b):
         a, b = b, a % b
     return a
 
+def xgcd(a, b):
+    """
+    Extended Euclidean Alg.
+    
+    take positive integers a, b as input, and return 
+    a triple (g, x, y), such that ax + by = g = gcd(a, b).
+    """
+    x0, x1, y0, y1 = 1, 0, 0, 1
+    while b != 0:
+        q, a, b = a // b, b, a % b
+        x0, x1 = x1, x0 - q * x1
+        y0, y1 = y1, y0 - q * y1
+    return  a, x0, y0
+
+def invmod(a, N):
+    """
+    What is the multiplicative inverse of a, inv_a,
+    such that a * inv_a = 1 mod N.
+    """
+    return xgcd(a, N)[1] % N  # inv_a (gcd is 1, a * x0 + N * x1 = 1)
+
 def tots(N):  # on the same line is OK
     """
     List numbers with no factors in common with N
