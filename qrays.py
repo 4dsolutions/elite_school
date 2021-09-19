@@ -14,6 +14,7 @@ the docstring for more details.
 
 @author:  K. Urner, 4D Solutions, (M) MIT License
 
+ Sep 19, 2021: make xyz Vector a property of Qvector vs. a method
  Sep 06, 2019: have type(self)() instead of Qvector() return outcomes
  May 25, 2019: add area methods based on cross product
  Jun 20, 2018: make Qvectors sortable, hashable
@@ -312,6 +313,7 @@ class Qvector:
     def angle(self, v1):
         return self.xyz().angle(v1.xyz())
         
+    @property
     def xyz(self):
         a,b,c,d     =  self.coords
         k           =  0.5/root2
