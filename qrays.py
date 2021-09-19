@@ -52,7 +52,7 @@ class Vector:
 
     def __init__(self, arg):
         """Initialize a vector at an (x,y,z)"""
-        self.xyz = XYZ(*map(float,arg))
+        self.xyz = XYZ(*arg)
 
     def __repr__(self):
         return repr(self.xyz)
