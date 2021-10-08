@@ -14,6 +14,7 @@ the docstring for more details.
 
 @author:  K. Urner, 4D Solutions, (M) MIT License
 
+ Sep 19, 2021: remove autoconvert to floating point when initializing Vector
  Sep 19, 2021: make xyz Vector a property of Qvector vs. a method
  Sep 06, 2019: have type(self)() instead of Qvector() return outcomes
  May 25, 2019: add area methods based on cross product
