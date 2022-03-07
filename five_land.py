@@ -5,9 +5,11 @@ Created on Sun Feb 27 15:25:48 2022
 
 @author: Kirby Urner
 """
+from random import choice
 
 words = set()
 from string import ascii_lowercase
+from wordle import evaluate
 
 def initialize():
     global words
@@ -113,7 +115,52 @@ def path_exists(wordA: str, wordB: str) -> bool:
         print("Same small island")
         return True
     return False
-  
+
+def elim_char(c, pool):
+    return {word for word in pool if c not in word}
+    
+def keep_char(c, p, pool):
+    return {word for word in pool if c in word and word[p] != c}
+
+def keep_char_pos(c, p, pool):
+    return {word.replace(c, c.upper()) for word in pool if word[p] == c}    
+
+def wordle(answer=None, guess=None):
+    initialize()
+    # from wordle import evaluate
+    if not answer:
+        answer = choice(list(words))
+    if not guess:
+        guess = choice(list(words))
+    pool = words.copy()
+    while True:
+        clue = evaluate(answer, guess.lower())
+        print(answer, guess.lower(), clue)
+        if clue == "CCCCC":
+            print("That's it!")
+            break
+
+        # print("Eliminating possibilities...")
+        # print("Pool size:", len(pool))
+        for idx, char in enumerate(clue):
+            if char == "C":
+                pool = keep_char_pos(guess[idx], idx, pool)
+                # print("C:",idx, char, len(pool))
+            if char == "N":
+                pool = elim_char(guess[idx], pool)
+                # print("N:",idx, char, len(pool))
+            if char == "P":
+                pool = keep_char(guess[idx], idx, pool)
+                # print("P:",idx, char, len(pool))
+
+        # print(" New size:", len(pool))
+        # print("Remaining:", len(pool))
+        if len(pool) == 0:
+            print("Out of options")
+            break
+        
+        guess = choice(list(pool))
+        
 def word_path(start_word):
     visited = set(start_word)
     last_word = start_word
