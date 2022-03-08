@@ -120,11 +120,52 @@ def elim_char(c, pool):
     return {word for word in pool if c not in word}
     
 def keep_char(c, p, pool):
-    return {word for word in pool if c in word and word[p] != c}
+    keep = set()
+    for word in pool:
+        listy = list(word)
+        for i in range(len(listy)):
+            if listy[i].upper() == c.upper() and i != p:
+                listy[i] = c.upper()
+                keep.add("".join(listy))
+                listy[i] = c # set back to what it was
+    return keep 
 
 def keep_char_pos(c, p, pool):
-    return {word.replace(c, c.upper()) for word in pool if word[p] == c}    
+    keep = set()
+    for word in pool:
+        listy = list(word)
+        listy[p] = c.upper()
+        keep.add("".join(listy))
+    return keep    
 
+def eliminate(guess, answer, clue, pool):
+    # print("Eliminating possibilities...")
+    # print("Pool size:", len(pool))
+    for idx, char in enumerate(clue):
+        if char == "C":
+            pool = keep_char_pos(guess[idx], idx, pool)
+            # print("C:",idx, char, len(pool))
+    if answer.upper() not in [word.upper() for word in pool]:
+        print("After C")
+
+    for idx, char in enumerate(clue):        
+        if char == "P":
+            pool = keep_char(guess[idx], idx, pool)
+            # print("P:",idx, char, len(pool))
+    if answer.upper() not in [word.upper() for word in pool]:
+        print("After P")
+        
+    for idx, char in enumerate(clue):
+        if char == "N":
+            pool = elim_char(guess[idx], pool)
+            # print("N:",idx, char, len(pool))
+    if answer.upper() not in [word.upper() for word in pool]:
+        print("After N")
+        
+
+    
+    return pool
+            
 def wordle(answer=None, guess=None):
     initialize()
     # from wordle import evaluate
@@ -140,18 +181,7 @@ def wordle(answer=None, guess=None):
             print("That's it!")
             break
 
-        # print("Eliminating possibilities...")
-        # print("Pool size:", len(pool))
-        for idx, char in enumerate(clue):
-            if char == "C":
-                pool = keep_char_pos(guess[idx], idx, pool)
-                # print("C:",idx, char, len(pool))
-            if char == "N":
-                pool = elim_char(guess[idx], pool)
-                # print("N:",idx, char, len(pool))
-            if char == "P":
-                pool = keep_char(guess[idx], idx, pool)
-                # print("P:",idx, char, len(pool))
+        pool = eliminate(guess, answer, clue, pool)
 
         # print(" New size:", len(pool))
         # print("Remaining:", len(pool))
