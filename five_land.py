@@ -116,26 +116,21 @@ def path_exists(wordA: str, wordB: str) -> bool:
         return True
     return False
 
-def elim_char(c, pool):
-    return {word for word in pool if c not in word}
+def elim_char(c, p, pool):
+    # only eliminates words with c in the current slot
+    return {word for word in pool if c != word[p]}
     
 def keep_char(c, p, pool):
-    keep = set()
-    for word in pool:
-        listy = list(word)
-        for i in range(len(listy)):
-            if listy[i].upper() == c.upper() and i != p:
-                listy[i] = c.upper()
-                keep.add("".join(listy))
-                listy[i] = c # set back to what it was
-    return keep 
-
+    return {word for word in pool if c != word[p] and c in word}
+ 
 def keep_char_pos(c, p, pool):
+    # uppercase letters are protected from detection
     keep = set()
     for word in pool:
-        listy = list(word)
-        listy[p] = c.upper()
-        keep.add("".join(listy))
+        if word[p].upper() == c.upper():
+            listy = list(word)
+            listy[p] = c.upper()
+            keep.add("".join(listy))
     return keep    
 
 def eliminate(guess, answer, clue, pool):
@@ -157,13 +152,11 @@ def eliminate(guess, answer, clue, pool):
         
     for idx, char in enumerate(clue):
         if char == "N":
-            pool = elim_char(guess[idx], pool)
+            pool = elim_char(guess[idx], idx, pool)
             # print("N:",idx, char, len(pool))
     if answer.upper() not in [word.upper() for word in pool]:
         print("After N")
-        
-
-    
+            
     return pool
             
 def wordle(answer=None, guess=None):
