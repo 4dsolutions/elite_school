@@ -121,10 +121,12 @@ def elim_char(c, p, pool):
     return {word for word in pool if c != word[p]}
     
 def keep_char(c, p, pool):
+    # keeps words with c only if c is not in position p
     return {word for word in pool if c != word[p] and c in word}
  
 def keep_char_pos(c, p, pool):
-    # uppercase letters are protected from detection
+    # remove c at p from further consideration, it's correct
+    # use c.uppercase() to protect from detection / elimination
     keep = set()
     for word in pool:
         if word[p].upper() == c.upper():
@@ -139,23 +141,14 @@ def eliminate(guess, answer, clue, pool):
     for idx, char in enumerate(clue):
         if char == "C":
             pool = keep_char_pos(guess[idx], idx, pool)
-            # print("C:",idx, char, len(pool))
-    if answer.upper() not in [word.upper() for word in pool]:
-        print("After C")
 
     for idx, char in enumerate(clue):        
         if char == "P":
             pool = keep_char(guess[idx], idx, pool)
-            # print("P:",idx, char, len(pool))
-    if answer.upper() not in [word.upper() for word in pool]:
-        print("After P")
         
     for idx, char in enumerate(clue):
         if char == "N":
             pool = elim_char(guess[idx], idx, pool)
-            # print("N:",idx, char, len(pool))
-    if answer.upper() not in [word.upper() for word in pool]:
-        print("After N")
             
     return pool
             
