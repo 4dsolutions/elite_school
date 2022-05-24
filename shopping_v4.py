@@ -63,7 +63,6 @@ class SuperMarket:
 class Shopper:
     
     def __init__(self, name, budget):
-        # self.pronoun = ""
         self.name = name
         self.basket = { }
         self.wallet = budget # budgeted allowance
@@ -132,8 +131,6 @@ def simulation():
             print(kirby)
             print(market.inventory.wares)
             print(market)
-        finally:
-            pass
 
 if __name__ == "__main__":
     simulation()
