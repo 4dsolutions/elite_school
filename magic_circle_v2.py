@@ -4,16 +4,6 @@
 Created on Wed Oct 18 15:25:39 2017
 
 @author: kurner
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Oct 20 15:43:14 2016
-Modified Oct 17, 2017
-
-@author: Kirby Urner
-
-Made this _v2 with circumference added as a new property
 
 toggle the import model_property on and off to see
 the example works the same either way.  model_property
