@@ -1,5 +1,4 @@
-pov_header = \
-"""
+pov_header = """
 // Persistence of Vision Ray Tracer Scene Description File
 // File: xyz.pov
 // Vers: 3.6
@@ -7,7 +6,9 @@ pov_header = \
 // Date: Sat Sep  7 09:49:33 2019
 // Auth: me
 // ==== Standard POV-Ray Includes ====
+
 #include "colors.inc"     // Standard Color definitions
+
 // include "textures.inc"   // Standard Texture definitions
 // include "functions.inc"  // internal functions usable in user defined functions
 
@@ -16,7 +17,9 @@ pov_header = \
 // to parse!
 // --- general include files ---
 // include "chars.inc"      // A complete library of character objects, by Ken Maeno
-include "skies.inc"      // Ready defined sky spheres
+
+#include "skies.inc"      // Ready defined sky spheres
+
 // include "stars.inc"      // Some star fields
 // include "strings.inc"    // macros for generating and manipulating text strings
 
@@ -56,5 +59,5 @@ light_source {
   translate <20, -15, -10>
 }
 
-background { color rgb <1.0, 1.0, 1.0> }
+sky_sphere {S_Cloud2}
 """
