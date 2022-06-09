@@ -13,3 +13,5 @@ already with some experience.  These were high school students,
 and younger, but with lots of backgrounding in coding already,
 including in other languages.  I covered a lot of the same 
 topics I would cover with adults for other companies.
+
+(copyleft 2022, MIT License)
