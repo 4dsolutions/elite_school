@@ -1,3 +1,117 @@
+import numpy as np
+
+class Vector:
+    
+    def __init__(self, x, y, z):
+        self.v = np.array((x, y, z))
+        
+    def __add__(self, other):
+        v_sum = self.v + other.v
+        return type(self)(*v_sum)
+    
+    def __neg__(self):
+        return -1 * self
+    
+    def __sub__(self, other):
+        v = self.v + (-other.v)
+        return type(self)(*v)
+                      
+    def __mul__(self, scalar):
+        v = scalar * self.v
+        return type(self)(*v)
+    
+    # scalar on the left: s * Vector -> Vector.__rmul__(s)
+    __rmul__ = __mul__
+    
+    def __truediv__(self, scalar):
+        new_v = (1/scalar) * self.v
+        return type(self)(*new_v)
+    
+    def normalize(self):
+        if self.length != 0:
+            return type(self)(*(self.v/self.length))
+        else:
+            return type(self)((0,0,0))
+    
+    @property
+    def length(self):
+        x, y, z = self.v
+        return np.sqrt(sum((x**2, y**2, z**2)))
+    
+    def __repr__(self):
+        return 'Vector({},{},{})'.format(*self.v)
+    
+class POV_Vector(Vector):
+
+    template = ("sphere {{ {}, {} texture "
+                "{{ pigment {{ color {} }} }} no_shadow }}") 
+    
+    def draw_vert(self, c, r, outfile): 
+        vert = "< {}, {}, {} >".format(*self.v)
+        print(self.template.format(vert, r, c), file=outfile)
+
+    def __repr__(self):
+        return 'POV_Vector({},{},{})'.format(*self.v)
+
+class POV_Edge:
+    
+    template = ("cylinder {{ {}, {}, {} texture "
+                "{{pigment {{ color {} }} }} no_shadow }}")
+        
+    def __init__(self, v0, v1):
+        self.v0 = v0
+        self.v1 = v1
+
+    def draw_edge(self, c, r, outfile=None):
+        v = self.v0
+        v0_t = "< {}, {}, {} >".format(*self.v0.v)
+        v = self.v1
+        v1_t = "< {}, {}, {} >".format(*self.v1.v)
+        data = (v0_t, v1_t, r, c)
+        print(self.template.format(*data), file=outfile)
+        
+    def __repr__(self):
+        return "POV_Edge({}, {})".format(self.v0, self.v1)
+        
+class Polyhedron:
+    
+    def _distill(self):
+
+        edges = []
+        unique = set()
+        
+        for f in self.faces:
+            for pair in zip(f , f[1:] + (f[0],)):
+                unique.add( tuple(sorted(pair)) )
+        
+        for edge in unique:
+            edges.append( POV_Edge(self.vertexes[edge[0]],
+                                   self.vertexes[edge[1]]) )
+
+        return edges            
+         
+    def render(self, output):
+        for e in self.edges:
+            e.draw_edge(c=self.edge_color, r=self.edge_radius, outfile=output)
+        for v in self.vertexes.values():
+            v.draw_vert(c=self.vert_color, r=self.vert_radius, outfile=output)
+            
+class Tetrahedron(Polyhedron):
+
+    def __init__(self, verts):
+        self.vertexes = verts
+        self.faces = (('a','b','c'), 
+                      ('a','c','d'), 
+                      ('a','d','b'), 
+                      ('b','c','d'))
+        self.edges = self._distill()
+        
+        # POV-Ray
+        self.edge_color = "rgb <1, 0, 0>"
+        self.edge_radius= 0.03
+        self.vert_color = "rgb <0, 0, 1>"
+        self.vert_radius= 0.05
+
 pov_header = """
 // Persistence of Vision Ray Tracer Scene Description File
 // File: xyz.pov
@@ -61,3 +175,8 @@ light_source {
 
 sky_sphere {S_Cloud2}
 """
+
+if __name__ == "__main__":
+    with open("render_me.pov", 'w') as output:
+        print(pov.pov_header, file=output)
+        t.render(output)
