@@ -107,10 +107,71 @@ class Tetrahedron(Polyhedron):
         self.edges = self._distill()
         
         # POV-Ray
+        self.edge_color = "rgb <1, 0.4, 0>"
+        self.edge_radius= 0.03
+        self.vert_color = "rgb <1, 0.4, 0>"
+        self.vert_radius= 0.05
+
+
+class InvTetrahedron(Polyhedron):
+    """
+    Inverse Tetrahedron
+    """
+    
+    def __init__(self, verts):
+        
+        self.vertexes = verts
+        self.faces = (('e','f','g'),
+                      ('e','g','h'),
+                      ('e','h','f'),
+                      ('f','h','g'))
+        self.edges = self._distill()
+        
+        # POV-Ray
+        self.edge_color = "rgb <0, 0, 0>" # black
+        self.edge_radius= 0.03
+        self.vert_color = "rgb <0, 0, 0>" # black
+        self.vert_radius= 0.05
+        
+class Cube (Polyhedron):
+    """
+    Cube
+    """
+
+    def __init__(self, verts):
+        self.vertexes = verts        
+        self.faces = (('a','f','c','h'),
+                      ('h','c','e','b'),
+                      ('b','e','d','g'),
+                      ('g','d','f','a'),
+                      ('c','f','d','e'),
+                      ('a','h','b','g'))
+        self.edges = self._distill()
+ 
+        # POV-Ray
+        self.edge_color = "rgb <0, 1, 0>"
+        self.edge_radius= 0.03
+        self.vert_color = "rgb <0, 1, 0>"
+        self.vert_radius= 0.03
+
+
+class Octahedron (Polyhedron):
+    """
+    Octahedron
+    """
+
+    def __init__(self, verts):
+
+        self.vertexes = verts
+        self.faces = (('j','k','i'),('j','i','l'),('j','l','n'),('j','n','k'),               
+                      ('m','k','i'),('m','i','l'),('m','l','n'),('m','n','k'))
+
+        self.edges = self._distill()        
+        # POV-Ray
         self.edge_color = "rgb <1, 0, 0>"
         self.edge_radius= 0.03
-        self.vert_color = "rgb <0, 0, 1>"
-        self.vert_radius= 0.05
+        self.vert_color = "rgb <1, 0, 0>"
+        self.vert_radius= 0.03
 
 pov_header = """
 // Persistence of Vision Ray Tracer Scene Description File
@@ -177,6 +238,40 @@ sky_sphere {S_Cloud2}
 """
 
 if __name__ == "__main__":
+    # Tetrahedron
+    a = POV_Vector(x =  0.35355339059327373, 
+                   y =  0.35355339059327373, 
+                   z =  0.35355339059327373)
+
+    b = POV_Vector(x = -0.35355339059327373, 
+                   y = -0.35355339059327373, 
+                   z =  0.35355339059327373)
+
+    c = POV_Vector(x = -0.35355339059327373, 
+                   y =  0.35355339059327373, 
+                   z = -0.35355339059327373)
+
+    d = POV_Vector(x =  0.35355339059327373, 
+                   y = -0.35355339059327373, 
+                   z = -0.35355339059327373)
+    
+    e,f,g,h     = b+c+d, a+c+d, a+b+d, a+b+c 
+    i,j,k,l,m,n = a+b, a+c, a+d, b+c, b+d, c+d
+    
+    t_dict    = {'a':a, 'b':b, 'c':c, 'd':d}
+    it_dict   = {'e':e, 'f':f, 'g':g, 'h':h}
+    cube_dict = t_dict.copy()
+    cube_dict.update(it_dict)
+    octa_dict = {'i':i, 'j':j, 'k':k, 'l':l, 'm':m, 'n':n}
+    
+    t  = Tetrahedron(t_dict)
+    it = InvTetrahedron(it_dict)
+    c  = Cube(cube_dict)
+    oc = Octahedron(octa_dict)
+    
     with open("render_me.pov", 'w') as output:
-        print(pov.pov_header, file=output)
+        print(pov_header, file=output)
         t.render(output)
+        it.render(output)
+        c.render(output)
+        oc.render(output)
