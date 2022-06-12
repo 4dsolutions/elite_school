@@ -38,17 +38,29 @@ class Vector:
         x, y, z = self.v
         return np.sqrt(sum((x**2, y**2, z**2)))
     
+    def copy(self):
+        return type(self)(*self.v)
+    
     def __repr__(self):
         return 'Vector({},{},{})'.format(*self.v)
     
 class POV_Vector(Vector):
 
-    template = ("sphere {{ {}, {} texture "
-                "{{ pigment {{ color {} }} }} no_shadow }}") 
-    
+    vert_template = ("sphere {{ {}, {} texture "
+                     "{{ pigment {{ color {} }} }} no_shadow }}") 
+
+    edge_template = ("cylinder {{ {}, {}, {} texture "
+                     "{{pigment {{ color {} }} }} no_shadow }}")
+        
     def draw_vert(self, c, r, outfile): 
         vert = "< {}, {}, {} >".format(*self.v)
-        print(self.template.format(vert, r, c), file=outfile)
+        print(self.vert_template.format(vert, r, c), file=outfile)
+        
+    def draw_edge(self, c, r, outfile=None):
+        v0_t = "< {}, {}, {} >".format(*(0,0,0))
+        v1_t = "< {}, {}, {} >".format(*self.v)
+        data = (v0_t, v1_t, r, c)
+        print(self.edge_template.format(*data), file=outfile)
 
     def __repr__(self):
         return 'POV_Vector({},{},{})'.format(*self.v)
@@ -61,7 +73,7 @@ class POV_Edge:
     def __init__(self, v0, v1):
         self.v0 = v0
         self.v1 = v1
-
+        
     def draw_edge(self, c, r, outfile=None):
         v = self.v0
         v0_t = "< {}, {}, {} >".format(*self.v0.v)
@@ -69,7 +81,7 @@ class POV_Edge:
         v1_t = "< {}, {}, {} >".format(*self.v1.v)
         data = (v0_t, v1_t, r, c)
         print(self.template.format(*data), file=outfile)
-        
+            
     def __repr__(self):
         return "POV_Edge({}, {})".format(self.v0, self.v1)
         
