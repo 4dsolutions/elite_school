@@ -100,7 +100,13 @@ class Polyhedron:
             edges.append( POV_Edge(self.vertexes[edge[0]],
                                    self.vertexes[edge[1]]) )
 
-        return edges            
+        return edges  
+    
+    def __mul__(self, scalar):
+        new_verts = {}
+        for k, v in self.vertexes.items():
+            new_verts[k] = v * scalar
+        return type(self)(verts = new_verts)
          
     def render(self, output):
         for e in self.edges:
@@ -145,7 +151,7 @@ class InvTetrahedron(Polyhedron):
         self.vert_color = "rgb <0, 0, 0>" # black
         self.vert_radius= 0.05
         
-class Cube (Polyhedron):
+class Cube(Polyhedron):
     """
     Cube
     """
@@ -184,6 +190,16 @@ class Octahedron (Polyhedron):
         self.edge_radius= 0.03
         self.vert_color = "rgb <1, 0, 0>"
         self.vert_radius= 0.03
+
+# Rotation Matrices
+from math import radians
+
+def rotx(deg):
+    θ = radians(deg)
+    Rx = np.matrix([[1, 0, 0], 
+                   [0, np.cos(θ), -np.sin(θ)], 
+                   [0, np.sin(θ), np.cos(θ)]])
+    return Rx
 
 pov_header = """
 // Persistence of Vision Ray Tracer Scene Description File
@@ -226,8 +242,8 @@ global_settings {ambient_light rgb<1, 1, 1> }
 
 // perspective (default) camera
 camera {
-  location  <4, 0.1, 0.2>
-//  rotate    <45, 45, 0.0>
+  location  <3, 0.1, 0.2>
+// rotate    <0, 25, 0.0>
   look_at   <0.0, 0.0,  0.0>
   right     x*image_width/image_height
 }
@@ -249,7 +265,17 @@ light_source {
 sky_sphere {S_Cloud2}
 """
 
-if __name__ == "__main__":
+def frame_gen():
+    import os
+    os.chdir('./anim')
+    files = sorted([fname for fname in os.listdir(".") if ".pov" in fname])
+    for f in files:
+        cmd = "/usr/local/bin/povray +A +H768 +W1024 ./{}".format(f)
+        print("Processing...", cmd)
+        output = os.system(cmd) # <-- uncomment for actual frame generation
+    os.chdir('..')
+    
+def scenario1():
     # Tetrahedron
     a = POV_Vector(x =  0.35355339059327373, 
                    y =  0.35355339059327373, 
@@ -287,3 +313,92 @@ if __name__ == "__main__":
         it.render(output)
         c.render(output)
         oc.render(output)
+
+def scenario2():
+    
+    # Tetrahedron
+    a = POV_Vector(x =  0.35355339059327373, 
+                   y =  0.35355339059327373, 
+                   z =  0.35355339059327373)
+
+    b = POV_Vector(x = -0.35355339059327373, 
+                   y = -0.35355339059327373, 
+                   z =  0.35355339059327373)
+
+    c = POV_Vector(x = -0.35355339059327373, 
+                   y =  0.35355339059327373, 
+                   z = -0.35355339059327373)
+
+    d = POV_Vector(x =  0.35355339059327373, 
+                   y = -0.35355339059327373, 
+                   z = -0.35355339059327373)
+    
+    e,f,g,h     = b+c+d, a+c+d, a+b+d, a+b+c
+    
+    cube_dict = {'a':a, 'b':b, 'c':c, 'd':d,
+                 'e':e, 'f':f, 'g':g, 'h':h}
+    
+    ivm_cube = Cube(cube_dict)
+    xyz_cube = ivm_cube * (1/np.sqrt(2))
+    
+    with open("render_me.pov", 'w') as output:
+        print(pov_header, file=output)
+        ivm_cube.render(output)
+        xyz_cube.render(output)
+        
+        POV_Edge(ivm_cube.vertexes['a'],
+                 xyz_cube.vertexes['a']).draw_edge("rgb <0, 0, 0>", 0.03, output)
+        POV_Edge(ivm_cube.vertexes['b'],
+                 xyz_cube.vertexes['b']).draw_edge("rgb <0, 0, 0>", 0.03, output)
+        POV_Edge(ivm_cube.vertexes['c'],
+                 xyz_cube.vertexes['c']).draw_edge("rgb <0, 0, 0>", 0.03, output)
+        POV_Edge(ivm_cube.vertexes['d'],
+                 xyz_cube.vertexes['d']).draw_edge("rgb <0, 0, 0>", 0.03, output)
+        
+        POV_Edge(ivm_cube.vertexes['e'],
+                 xyz_cube.vertexes['e']).draw_edge("rgb <0, 0, 0>", 0.03, output)
+        POV_Edge(ivm_cube.vertexes['f'],
+                 xyz_cube.vertexes['f']).draw_edge("rgb <0, 0, 0>", 0.03, output)
+        POV_Edge(ivm_cube.vertexes['g'],
+                 xyz_cube.vertexes['g']).draw_edge("rgb <0, 0, 0>", 0.03, output)
+        POV_Edge(ivm_cube.vertexes['h'],
+                 xyz_cube.vertexes['h']).draw_edge("rgb <0, 0, 0>", 0.03, output)        
+        
+def scenario3():
+    a = POV_Vector(x =  0.35355339059327373, 
+                   y =  0.35355339059327373, 
+                   z =  0.35355339059327373)
+
+    x = POV_Vector(2, 0, 0)
+    y = POV_Vector(0, 1.5, 0)
+    z = POV_Vector(0, 0, 1.5)
+    origin = POV_Vector(0,0,0)
+
+    the_vector = a.copy()
+    # POV-Ray
+    edge_color = "rgb <1, 0.4, 0>"
+    edge_radius= 0.03
+    vert_color = "rgb <0, 0, 1>"
+    vert_radius= 0.05
+
+    rot10deg = rotx(10)
+    for frame_no in range(35):
+        file_path = "./anim/frame{:02}.pov".format(frame_no)
+        with open(file_path, "w") as output:
+            print("Generating", file_path)
+            print(pov_header, file=output)  # print to the output file
+
+            # show origin (black hole) and positive x towards us
+            origin.draw_vert("rgb <0, 0, 0>", 0.1, output)
+            x.draw_edge("rgb <66/255, 224/255, 245/255>", 0.01, output)
+            the_vector.draw_edge(edge_color, edge_radius, output)
+            the_vector.draw_vert(vert_color, vert_radius, output)
+
+        v = rot10deg * np.array(the_vector.v).reshape((3,1))
+        v = [v[i,0] for i in range(3)]
+        the_vector = POV_Vector(v[0], v[1], v[2])  # update the_vector
+
+        
+if __name__ == "__main__":
+    scenario3()
+    frame_gen()
