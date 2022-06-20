@@ -13,7 +13,8 @@ and triangles for IVM units of volume and area.  See
 the docstring for more details.
 
 @author:  K. Urner, 4D Solutions, (M) MIT License
-
+ 
+ Jun 20, 2022: add sympy dependency
  Oct  8, 2021: remove gmpy2 dependency
  Sep 19, 2021: remove autoconvert to floating point when initializing Vector
  Sep 19, 2021: make xyz Vector a property of Qvector vs. a method
