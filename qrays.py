@@ -39,15 +39,16 @@ the docstring for more details.
  June 6, 2020: spherical coordinates debug, working on blender integration
 """
 
-from math import radians, degrees, cos, sin, acos
-import math
+from sympy import cos, sin, acos, sqrt
+from mpmath import radians, degrees
+import sympy as sp
 from operator import add, sub, mul, neg
 from collections import namedtuple
 
 XYZ = namedtuple("xyz_vector", "x y z")
 IVM = namedtuple("ivm_vector", "a b c d")
 
-root2   = 2.0**0.5
+root2   = sp.sqrt(2)
 
 class Vector:
 
@@ -123,12 +124,12 @@ class Vector:
         return self.dot(self) ** 0.5
 
     def angle(self,v1):
-       """
-       Return angle between self and v1, in decimal degrees
-       """
-       costheta = round(self.dot(v1)/(self.length() * v1.length()),10)
-       theta = degrees(acos(costheta))
-       return round(theta,10)
+        """
+        Return angle between self and v1, in decimal degrees
+        """
+        costheta = self.dot(v1)/(self.length() * v1.length())
+        theta = degrees(acos(costheta))
+        return theta
 
     def rotaxis(self,vAxis,deg):
         """
@@ -194,11 +195,18 @@ class Vector:
     def quadray(self):
         """return (a, b, c, d) quadray based on current (x, y, z)"""
         x, y, z = self.xyz
-        k = 2/root2
-        a = k * ((x >= 0)* ( x) + (y >= 0) * ( y) + (z >= 0) * ( z))
-        b = k * ((x <  0)* (-x) + (y <  0) * (-y) + (z >= 0) * ( z))
-        c = k * ((x <  0)* (-x) + (y >= 0) * ( y) + (z <  0) * (-z))
-        d = k * ((x >= 0)* ( x) + (y <  0) * (-y) + (z <  0) * (-z))
+        k = root2
+        x_ge_0 = 1 if x >=0 else 0
+        y_ge_0 = 1 if y >=0 else 0
+        z_ge_0 = 1 if z >=0 else 0
+        x_lt_0 = 1 if x < 0 else 0
+        y_lt_0 = 1 if y < 0 else 0
+        z_lt_0 = 1 if z < 0 else 0
+
+        a = k * (x_ge_0 *  x + y_ge_0 *  y + z_ge_0 *  z)
+        b = k * (x_lt_0 * -x + y_lt_0 * -y + z_ge_0 *  z)
+        c = k * (x_lt_0 * -x + y_ge_0 *  y + z_lt_0 * -z)
+        d = k * (x_ge_0 *  x + y_lt_0 * -y + z_lt_0 * -z)
         return Qvector((a, b, c, d))
 
         
@@ -296,7 +304,7 @@ class Qvector:
         D = type(self)((0,0,0,1))
         a1,b1,c1,d1 = v1.coords
         a2,b2,c2,d2 = self.coords
-        k= (2.0**0.5)/4.0
+        k= root2/4.0
         the_sum =   (A*c1*d2 - A*d1*c2 - A*b1*d2 + A*b1*c2
                + A*b2*d1 - A*b2*c1 - B*c1*d2 + B*d1*c2 
                + b1*C*d2 - b1*D*c2 - b2*C*d1 + b2*D*c1 
