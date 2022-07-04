@@ -51,6 +51,10 @@ class POV_Vector(Vector):
 
     edge_template = ("cylinder {{ {}, {}, {} texture "
                      "{{pigment {{ color {} }} }} no_shadow }}")
+    
+    cone_template = ("cone {{ {}, {} "
+                             "{}, {} texture "
+                     "{{pigment {{ color {} }} }} no_shadow }}")
         
     def draw_vert(self, c, r, outfile): 
         vert = "< {}, {}, {} >".format(*self.v)
@@ -61,7 +65,28 @@ class POV_Vector(Vector):
         v1_t = "< {}, {}, {} >".format(*self.v)
         data = (v0_t, v1_t, r, c)
         print(self.edge_template.format(*data), file=outfile)
-
+        
+    def draw_arrow(self, c, r, outfile=None):
+        """
+        https://www.povray.org/documentation/view/3.7.0/23/
+        """
+        base_v = self - (0.3 * self.normalize())
+        base = "< {}, {}, {} >".format(*base_v.v)
+        tip  = "< {}, {}, {} >".format(*self.v)
+        data = (base, r, tip, 0.0, c)
+        print(self.cone_template.format(*data), file=outfile)  
+        
+    def draw_edge_arrow(self, ec, er, ac, ar, outfile=None):
+        """
+        https://www.povray.org/documentation/view/3.7.0/23/
+        """
+        base_v = self - (0.3 * self.normalize())
+        base_v.draw_edge(ec, er, outfile)
+        base = "< {}, {}, {} >".format(*base_v.v)
+        tip  = "< {}, {}, {} >".format(*self.v)
+        data = (base, ar, tip, 0.0, ac)
+        print(self.cone_template.format(*data), file=outfile)        
+      
     def __repr__(self):
         return 'POV_Vector({},{},{})'.format(*self.v)
 
@@ -125,10 +150,11 @@ class Tetrahedron(Polyhedron):
         self.edges = self._distill()
         
         # POV-Ray
-        self.edge_color = "rgb <1, 0.4, 0>"
+        # self.edge_color = "rgb <106/255, 13/255, 173/255>"  # purple
+        self.edge_color = "rgb <1, 0.4, 0>"  # neon orange
         self.edge_radius= 0.03
-        self.vert_color = "rgb <1, 0.4, 0>"
-        self.vert_radius= 0.05
+        self.vert_color = self.edge_color
+        self.vert_radius= 0.01
 
 
 class InvTetrahedron(Polyhedron):
@@ -149,7 +175,7 @@ class InvTetrahedron(Polyhedron):
         self.edge_color = "rgb <0, 0, 0>" # black
         self.edge_radius= 0.03
         self.vert_color = "rgb <0, 0, 0>" # black
-        self.vert_radius= 0.05
+        self.vert_radius= 0.01
         
 class Cube(Polyhedron):
     """
@@ -191,6 +217,48 @@ class Octahedron (Polyhedron):
         self.vert_color = "rgb <1, 0, 0>"
         self.vert_radius= 0.03
 
+class RD (Polyhedron):
+    """
+    Rhombic Dodecahedron
+    """
+
+    def __init__(self, verts):
+        # 14 vertexes
+        self.vertexes = verts
+        # 12 faces
+        self.faces = (('j','f','k','a'),('j','f','n','c'),('j','c','l','h'),('j','h','i','a'),
+                      ('m','d','k','g'),('m','d','n','e'),('m','e','l','b'),('m','b','i','g'),
+                      ('k','d','n','f'),('n','c','l','e'),('l','h','i','b'),('i','a','k','g'))
+
+        self.edges = self._distill()        
+        # POV-Ray
+        self.edge_color = "rgb <0, 0, 1>" # blue
+        self.edge_radius= 0.03
+        self.vert_color = "rgb <0, 0, 1>"
+        self.vert_radius= 0.03
+        
+class Cuboctahedron (Polyhedron):
+
+    def __init__(self, verts):
+        # 12 vertices
+        self.vertexes = verts
+        # 14 faces
+        self.faces = (('o','w','s','z'),('z','p','y','t'),
+                      ('t','v','u','s'),('w','q','x','u'),
+                      ('o','p','r','q'),('r','y','v','x'),
+                      ('z','s','t'),('t','y','v'),
+                      ('y','p','r'),('r','q','x'),
+                      ('x','u','v'),('u','s','w'),
+                      ('w','q','o'),('o','z','p'))
+
+        self.edges = self._distill()
+       
+        # POV-Ray
+        self.edge_color = "rgb <1, 233/255, 0>" # yellow
+        self.edge_radius= 0.03
+        self.vert_color = "rgb <1, 233/255, 0>"
+        self.vert_radius= 0.03
+        
 # Rotation Matrices
 from math import radians
 
@@ -243,7 +311,7 @@ global_settings {ambient_light rgb<1, 1, 1> }
 // perspective (default) camera
 camera {
   location  <3, 0.1, 0.2>
-// rotate    <0, 25, 0.0>
+  rotate    <0, 25, 0.0>
   look_at   <0.0, 0.0,  0.0>
   right     x*image_width/image_height
 }
@@ -274,7 +342,43 @@ def frame_gen():
         print("Processing...", cmd)
         output = os.system(cmd) # <-- uncomment for actual frame generation
     os.chdir('..')
+
+
+def scenario0():
+    # Tetrahedron
+    a = POV_Vector(x =  0.35355339059327373, 
+                   y =  0.35355339059327373, 
+                   z =  0.35355339059327373)
+
+    b = POV_Vector(x = -0.35355339059327373, 
+                   y = -0.35355339059327373, 
+                   z =  0.35355339059327373)
+
+    c = POV_Vector(x = -0.35355339059327373, 
+                   y =  0.35355339059327373, 
+                   z = -0.35355339059327373)
+
+    d = POV_Vector(x =  0.35355339059327373, 
+                   y = -0.35355339059327373, 
+                   z = -0.35355339059327373)
     
+    t_dict    = {'a':a, 'b':b, 'c':c, 'd':d}
+    t  = Tetrahedron(t_dict)
+    
+    # POV-Ray
+    edge_color = "rgb <1, 0.4, 0>"
+    edge_radius= 0.03
+    vert_color = "rgb <0, 0, 1>"
+    vert_radius= 0.05
+    
+    with open("render_me.pov", 'w') as output:
+        print(pov_header, file=output)
+        t.render(output)
+        a.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        b.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        c.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        d.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        
 def scenario1():
     # Tetrahedron
     a = POV_Vector(x =  0.35355339059327373, 
@@ -295,24 +399,42 @@ def scenario1():
     
     e,f,g,h     = b+c+d, a+c+d, a+b+d, a+b+c 
     i,j,k,l,m,n = a+b, a+c, a+d, b+c, b+d, c+d
+    o,p,q,r,s,t = i+j, i+k, i+l, i+m, n+j, n+k
+    u,v,w,x,y,z = n+l, n+m, j+l, l+m, m+k, k+j
     
     t_dict    = {'a':a, 'b':b, 'c':c, 'd':d}
     it_dict   = {'e':e, 'f':f, 'g':g, 'h':h}
     cube_dict = t_dict.copy()
     cube_dict.update(it_dict)
     octa_dict = {'i':i, 'j':j, 'k':k, 'l':l, 'm':m, 'n':n}
+    rd_dict = cube_dict.copy()
+    rd_dict.update(octa_dict)
+    co_dict = {"o":o, "p":p, "q":q, "r":r, "s":s, "t":t, 
+               "u":u, "v":v, "w":w, "x":x, "y":y, "z":z} 
     
     t  = Tetrahedron(t_dict)
     it = InvTetrahedron(it_dict)
     c  = Cube(cube_dict)
     oc = Octahedron(octa_dict)
+    rd = RD(rd_dict)
+    co = Cuboctahedron(co_dict)                               
+
+    # POV-Ray
+    edge_color = "rgb <1, 0.4, 0>"
+    edge_radius= 0.03
+    vert_color = "rgb <0, 0, 1>"
+    vert_radius= 0.05
     
     with open("render_me.pov", 'w') as output:
         print(pov_header, file=output)
-        t.render(output)
-        it.render(output)
-        c.render(output)
-        oc.render(output)
+        #t.render(output)
+        #it.render(output)
+        #c.render(output)
+        #oc.render(output)
+        rd.render(output)
+        co.render(output)
+        for v in co_dict.values():
+            v.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
 
 def scenario2():
     
@@ -391,8 +513,9 @@ def scenario3():
             # show origin (black hole) and positive x towards us
             origin.draw_vert("rgb <0, 0, 0>", 0.1, output)
             x.draw_edge("rgb <66/255, 224/255, 245/255>", 0.01, output)
-            the_vector.draw_edge(edge_color, edge_radius, output)
-            the_vector.draw_vert(vert_color, vert_radius, output)
+            # the_vector.draw_edge(edge_color, edge_radius, output)
+            # the_vector.draw_vert(vert_color, vert_radius, output)
+            the_vector.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
 
         v = rot10deg * np.array(the_vector.v).reshape((3,1))
         v = [v[i,0] for i in range(3)]
@@ -400,5 +523,5 @@ def scenario3():
 
         
 if __name__ == "__main__":
-    scenario3()
-    frame_gen()
+    scenario1()
+    # frame_gen()
