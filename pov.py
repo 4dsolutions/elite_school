@@ -427,14 +427,14 @@ def scenario1():
     
     with open("render_me.pov", 'w') as output:
         print(pov_header, file=output)
-        #t.render(output)
-        #it.render(output)
-        #c.render(output)
-        #oc.render(output)
+        t.render(output)
+        it.render(output)
+        c.render(output)
+        oc.render(output)
         rd.render(output)
         co.render(output)
-        for v in co_dict.values():
-            v.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        #for v in co_dict.values():
+        #   v.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
 
 def scenario2():
     
