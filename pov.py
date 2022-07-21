@@ -28,10 +28,28 @@ class Vector:
         return type(self)(*new_v)
     
     def normalize(self):
+        """
+        same direction, length 1
+        """
         if self.length != 0:
             return type(self)(*(self.v/self.length))
         else:
             return type(self)((0,0,0))
+
+    def dot(self, other):
+        """
+        dot product of this with another vector.
+        """
+        return sum(self.v * other.v)
+    
+    def angle(self, other):
+        """
+        angle between self and other, in decimal degrees
+        """
+        x, y, z = self.v
+        costheta = self.dot(other)/(self.length * other.length)
+        theta = np.degrees(np.arccos(costheta))
+        return theta
     
     @property
     def length(self):
@@ -311,7 +329,7 @@ global_settings {ambient_light rgb<1, 1, 1> }
 // perspective (default) camera
 camera {
   location  <3, 0.1, 0.2>
-  rotate    <0, 25, 0.0>
+  rotate    <0.0, 0.0, 10.0>
   look_at   <0.0, 0.0,  0.0>
   right     x*image_width/image_height
 }
@@ -380,7 +398,7 @@ def scenario0():
         d.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
         
 def scenario1():
-    # Tetrahedron
+    # initial Tetrahedron a-d:
     a = POV_Vector(x =  0.35355339059327373, 
                    y =  0.35355339059327373, 
                    z =  0.35355339059327373)
@@ -397,11 +415,13 @@ def scenario1():
                    y = -0.35355339059327373, 
                    z = -0.35355339059327373)
     
+    # the rest of the vectors a-z, for 26 points:
     e,f,g,h     = b+c+d, a+c+d, a+b+d, a+b+c 
     i,j,k,l,m,n = a+b, a+c, a+d, b+c, b+d, c+d
     o,p,q,r,s,t = i+j, i+k, i+l, i+m, n+j, n+k
     u,v,w,x,y,z = n+l, n+m, j+l, l+m, m+k, k+j
-    
+
+    # Concentric Hierarchy
     t_dict    = {'a':a, 'b':b, 'c':c, 'd':d}
     it_dict   = {'e':e, 'f':f, 'g':g, 'h':h}
     cube_dict = t_dict.copy()
@@ -521,7 +541,53 @@ def scenario3():
         v = [v[i,0] for i in range(3)]
         the_vector = POV_Vector(v[0], v[1], v[2])  # update the_vector
 
+def scenario4():
+    # Octaspokes
+    a = POV_Vector(x =  0.35355339059327373, 
+                   y =  0.35355339059327373, 
+                   z =  0.35355339059327373)
+
+    b = POV_Vector(x = -0.35355339059327373, 
+                   y = -0.35355339059327373, 
+                   z =  0.35355339059327373)
+
+    c = POV_Vector(x = -0.35355339059327373, 
+                   y =  0.35355339059327373, 
+                   z = -0.35355339059327373)
+
+    d = POV_Vector(x =  0.35355339059327373, 
+                   y = -0.35355339059327373, 
+                   z = -0.35355339059327373)
+    
+    e,f,g,h     = b+c+d, a+c+d, a+b+d, a+b+c 
+    i,j,k,l,m,n = a+b, a+c, a+d, b+c, b+d, c+d
+    octa_dict = {'i':i, 'j':j, 'k':k, 'l':l, 'm':m, 'n':n}
+    oc = Octahedron(octa_dict)
+        
+    # POV-Ray
+    edge_color = "rgb <1, 0.4, 0>"
+    edge_radius= 0.03
+    vert_color = "rgb <0, 0, 1>"
+    vert_radius= 0.05
+    
+    with open("render_me.pov", 'w') as output:
+        print(pov_header, file=output)
+        for v in i,j,k,l,m,n:
+            v.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        # oc.render(output)
+
+        # POV-Ray
+        edge_color = "rgb <102/255, 51/255, 153/255 >"
+        edge_radius= 0.03
+        vert_color = "rgb <0, 0, 1>"
+        vert_radius= 0.05
+    
+        a.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        b.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        c.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        d.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+
         
 if __name__ == "__main__":
-    scenario1()
+    scenario4()
     # frame_gen()
