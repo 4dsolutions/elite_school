@@ -328,7 +328,7 @@ global_settings {ambient_light rgb<1, 1, 1> }
 
 // perspective (default) camera
 camera {
-  location  <3, 0.1, 0.2>
+  location  <2*3, 2*0.1, 2*0.2>
   rotate    <0.0, 0.0, 10.0>
   look_at   <0.0, 0.0,  0.0>
   right     x*image_width/image_height
@@ -587,7 +587,58 @@ def scenario4():
         c.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
         d.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
 
+def scenario5():
+    
+    # positive X, Y and Z
+    x = POV_Vector(x =  1,
+                   y =  0,
+                   z =  0)
+    
+    y = POV_Vector(x =  0,
+                   y =  1,
+                   z =  0)
+    
+    z = POV_Vector(x =  0,
+                   y =  0,
+                   z =  1)
+    
+    # to alternate corners of an 8 octant cube
+    a = POV_Vector(x =  1, 
+                   y =  1, 
+                   z =  1)
+
+    b = POV_Vector(x = -1, 
+                   y = -1, 
+                   z =  1)
+
+    c = POV_Vector(x = -1, 
+                   y =  1, 
+                   z = -1)
+
+    d = POV_Vector(x =  1, 
+                   y = -1, 
+                   z = -1)
+    
+    # POV-Ray
+    edge_color = "rgb <102/255, 51/255, 153/255 >" # purple a,b,c,d
+    edge_radius= 0.03
+    vert_color = "rgb <0, 0, 1>"  # arrow tip color blue
+    vert_radius= 0.05
+
+    with open("render_me.pov", 'w') as output:
+        print(pov_header, file=output)
+        # XYZ dark gray with orange nibs
+        for v in x, y, z, -x, -y, -z:
+            v.draw_edge("rgb <43/255, 45/255, 47/255>", 0.03, output)
+            ve.draw_vert("rgb <1, 0.4, 0>", 0.04, output)
+        
+        # to alternate corners of 8-cube lattice
+        a.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        b.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        c.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+        d.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
+
         
 if __name__ == "__main__":
-    scenario4()
+    scenario5()
     # frame_gen()
