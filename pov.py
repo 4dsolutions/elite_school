@@ -328,7 +328,7 @@ global_settings {ambient_light rgb<1, 1, 1> }
 
 // perspective (default) camera
 camera {
-  location  <2*3, 2*0.1, 2*0.2>
+  location  <3, 0.1, 0.2>
   rotate    <0.0, 0.0, 10.0>
   look_at   <0.0, 0.0,  0.0>
   right     x*image_width/image_height
@@ -630,7 +630,7 @@ def scenario5():
         # XYZ dark gray with orange nibs
         for v in x, y, z, -x, -y, -z:
             v.draw_edge("rgb <43/255, 45/255, 47/255>", 0.03, output)
-            ve.draw_vert("rgb <1, 0.4, 0>", 0.04, output)
+            v.draw_vert("rgb <1, 0.4, 0>", 0.04, output)
         
         # to alternate corners of 8-cube lattice
         a.draw_edge_arrow(edge_color, edge_radius, vert_color, vert_radius, output)
@@ -640,5 +640,5 @@ def scenario5():
 
         
 if __name__ == "__main__":
-    scenario5()
+    scenario4()
     # frame_gen()
