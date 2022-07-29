@@ -40,8 +40,9 @@ the docstring for more details.
  June 6, 2020: spherical coordinates debug, working on blender integration
 """
 
-from sympy import cos, sin, acos, sqrt
+from sympy import cos, sin, acos, sqrt, atan
 from mpmath import radians, degrees
+import math
 import sympy as sp
 from operator import add, sub, mul, neg
 from collections import namedtuple
@@ -179,7 +180,7 @@ class Vector:
             
         else:  
             
-            theta = degrees(math.atan(self.y/self.x))
+            theta = degrees(atan(self.y/self.x))
             if   self.x < 0 and self.y == 0:   theta = 180
             # theta is positive so turn more than 180
             elif self.x < 0 and self.y <  0:   theta = 180 + theta
@@ -336,18 +337,18 @@ class Svector(Vector):
     """Subclass of Vector that takes spherical coordinate args."""
     
     def __init__(self,arg):
+        """
+        initialize a vector at an (r,phi,theta) tuple (= arg)        
+        """
         # if returning from Vector calc method, spherical is true
-        arg = Vector(arg).spherical()
-            
-        # initialize a vector at an (r,phi,theta) tuple (= arg)
+        # arg = Vector(arg).spherical()
         r     = arg[0]
         phi   = radians(arg[1])
         theta = radians(arg[2])
-        self.coords = tuple(map(lambda x:round(x,15),
-                      (r * cos(theta) * sin(phi),
-                       r * sin(theta) * sin(phi),
-                       r * cos(phi))))
-        self.xyz = self.coords
+        self.xyz = XYZ(
+                      r * cos(theta) * sin(phi),
+                      r * sin(theta) * sin(phi),
+                      r * cos(phi))
 
     def __repr__(self):
         return "Svector " + str(self.spherical())
