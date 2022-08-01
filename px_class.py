@@ -148,7 +148,7 @@ class P:
         """
         create new P with reversed dict
         """
-        newP = P(' ')
+        newP = P()
         newP._code = dict(zip(self._code.values(), self._code.keys()))
         return newP
         
