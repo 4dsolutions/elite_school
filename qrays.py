@@ -357,6 +357,9 @@ def dot(a,b):
     return a.dot(b)
 
 def cross(a,b):
+    """
+    cross product
+    """
     return a.cross(b)
 
 def angle(a,b):
