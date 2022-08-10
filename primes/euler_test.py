@@ -58,19 +58,20 @@ def test_small():
     e = 7
     d = invmod(e, phiN) # (e * d) % phiN == 1
     
-    print("Public Stuff", (e, N))
-    print("Secret Stuff", (d, p1, p2))
+    print(f"Public Stuff:\n  e={e}\n  N={N}")
+    print(f"Secret Stuff:\n  d={d}\n  p1={p1}\n  p2={p2}")
     
     m = b"it"  # bytes
     print("Text to encrypt: ", m)
     p_int = int(hexlify(m), 16)
     
-    assert pow(p_int, e*d, N) == p_int
+    assert pow(p_int, e*d, N) == p_int # Euler's Rule
     
     c = pow(p_int, e, N)  # <--- encrypt
+    print(f"Encrypted: {c}")
     output = pow(c, d, N) # <--- decrypt
     result = unhexlify(hex(output)[2:]) # drop "0x"
-    print("Decrypted:       ", result)
+    print(f"Decrypted: {result}")
 
 
 def test_big():
@@ -84,19 +85,21 @@ def test_big():
     e = 17
     d = invmod(e, phiN) # (e * d) % phiN == 1
     
-    print("Public Stuff", (e, N))
-    print("Secret Stuff", (d, p1, p2))
+    print(f"Public Stuff:\n  e={e}\n  N={N}")
+    print(f"Secret Stuff:\n  d={d}\n  p1={p1}\n  p2={p2}")
     
     m = b"dingaling"  # bytes
     print("Text to encrypt: ", m)
     p_int = int(hexlify(m), 16)
     
-    assert pow(p_int, e*d, N) == p_int
+    assert pow(p_int, e*d, N) == p_int # Euler's Rule
     
     c = pow(p_int, e, N)  # <--- encrypt
+    print(f"Encrypted: {c}")
     output = pow(c, d, N) # <--- decrypt
     result = unhexlify(hex(output)[2:]) # drop "0x"
-    print("Decrypted:       ", result)
+    print(f"Decrypted: {result}")
+
 
 if __name__ == "__main__":
     test_small()

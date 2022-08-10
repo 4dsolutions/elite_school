@@ -4,9 +4,13 @@
 Created on Wed Dec 30 09:10:18 2020
 
 @author: Kirby Urner
+
+Aug 7 2022:  interpolated Mod type from ADS_highschool_math.ipynb
 """
+
 import itertools
 from operator import mod as remainder
+from primes import invmod
 
 # These two might help with the lab
 from itertools import dropwhile, takewhile
@@ -53,6 +57,40 @@ def totient(N):
     "Euler's Totient"
     return len(tots(N))
 
+class Mod:
+    """
+    Integers operating relative to a _modulus.
+    """
+    _modulus = 12
+    
+    def __init__(self, n):
+        self.p = n % self._modulus
+        
+    def __add__(self, other):
+        return Mod(self.p + other.p)
+    
+    def __mul__(self, other):
+        return Mod(self.p * other.p)
+    
+    def __pow__(self, e):
+        new_p = self.p
+        if e < 0:
+            new_p = invmod(self.p, self._modulus)
+        e = abs(e)
+        return Mod(pow(new_p, e, self._modulus))
+    
+    def __eq__(self, other):
+        return self.p == other.p
+    
+    def __lt__(self, other):
+        return self.p < other.p
+    
+    def __hash__(self):
+        return 0
+    
+    def __repr__(self):
+        return "({} mod {})".format(self.p, self._modulus)
+    
 class Fibos:
 
     def __init__(self):
